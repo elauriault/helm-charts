@@ -1,7 +1,7 @@
 {{- if .Values.admin.ingress.enabled -}}
 {{- $fullName := include "powerdns.fullname" . -}}
 {{- $svcPort := .Values.admin.service.port -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -22,7 +22,10 @@ spec:
       http:
         paths:
           - path: {{ .Values.admin.ingress.path | quote }}
+            pathType: Prefix
             backend:
-              serviceName: {{ $fullName }}-service-admin
-              servicePort: {{ $svcPort }}
+              service:
+                 name: {{ $fullName }}-service-admin
+                 port:
+                   number: {{ $svcPort }}
 {{- end }}
