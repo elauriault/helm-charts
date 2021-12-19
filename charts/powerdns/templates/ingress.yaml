@@ -1,0 +1,28 @@
+{{- if .Values.admin.ingress.enabled -}}
+{{- $fullName := include "powerdns.fullname" . -}}
+{{- $svcPort := .Values.admin.service.port -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+{{- if eq .Values.admin.ingress.class "traefik" }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+{{- end }}
+{{- if eq .Values.admin.ingress.class "nginx" }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+{{- end }}
+spec:
+  rules:
+    - host: {{ .Values.admin.ingress.hostname }}.{{ .Values.powerdns.domain }}
+      http:
+        paths:
+          - path: {{ .Values.admin.ingress.path | quote }}
+            backend:
+              serviceName: {{ $fullName }}-service-admin
+              servicePort: {{ $svcPort }}
+{{- end }}
