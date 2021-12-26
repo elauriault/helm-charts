@@ -26,8 +26,8 @@ domain: external.local
 master: "yes"
 api: "yes"
 webserver: "yes"
-webserver_address: "0.0.0.0"
-webserver_allow_from: "0.0.0.0/0"
+webserver_address: "::"
+webserver_allow_from: "::/0"
 version_string: "anonymous"
 default_ttl: "1500"
 soa_minimum_ttl: "1200"
@@ -72,8 +72,8 @@ powerdns:
   master: "yes"
   api: "yes"
   webserver: "yes"
-  webserver_address: "0.0.0.0"
-  webserver_allow_from: "0.0.0.0/0"
+  webserver_address: "::"
+  webserver_allow_from: "::/0"
   version_string: "anonymous"
   default_ttl: "1500"
   soa_minimum_ttl: "1200"
@@ -88,9 +88,6 @@ powerdns:
     memory: "512Mi"
     cpu: "300m"
 
-
-
-
 mariadb:
   enabled: true
   image:
@@ -99,10 +96,10 @@ mariadb:
     pullPolicy: IfNotPresent
   persistence:
     enabled: false
-    accessMode: 'ReadWriteOnce'
-    size: '1Gi'
-  args: 
-    - --bind-address=0.0.0.0
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+  args:
+    - --bind-address=*
     - --innodb_use_native_aio=0
     - --innodb_flush_method=fsync
   requests:
