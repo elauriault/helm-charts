@@ -22,6 +22,36 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         powerdns.com/role: db
     spec:
+      initContainers:
+      - name: generate-ssl-certs
+        image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
+        command:
+        - /bin/bash
+        - -c
+        - |
+          # Generate SSL certificates for MariaDB
+          cd /ssl
+          if [ ! -f ca-key.pem ]; then
+            # Generate CA key and certificate
+            openssl genrsa 2048 > ca-key.pem
+            openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out ca-cert.pem -subj "/CN=MariaDB-CA"
+
+            # Generate server key and certificate
+            openssl req -newkey rsa:2048 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj "/CN=mariadb-server"
+            openssl rsa -in server-key.pem -out server-key.pem
+            openssl x509 -req -in server-req.pem -days 3650 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
+
+            # Set permissions
+            chmod 600 ca-key.pem server-key.pem
+            chmod 644 ca-cert.pem server-cert.pem server-req.pem
+
+            echo "SSL certificates generated successfully"
+          else
+            echo "SSL certificates already exist"
+          fi
+        volumeMounts:
+        - name: ssl-certs
+          mountPath: /ssl
       containers:
         - name: mariadb
           image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
@@ -33,6 +63,9 @@ spec:
 {{- range .Values.mariadb.args }}
           - {{ . | quote }}
 {{- end }}
+          - --ssl-ca=/ssl/ca-cert.pem
+          - --ssl-cert=/ssl/server-cert.pem
+          - --ssl-key=/ssl/server-key.pem
 {{- end }}
           env:
           - name: MYSQL_INITDB_SKIP_TZINFO
@@ -51,13 +84,17 @@ spec:
               secretKeyRef:
                 name: {{ template "powerdns.fullname" . }}-secret
                 key: MYSQL_PASS
-{{- if .Values.mariadb.persistence.enabled }}
           volumeMounts:
+          - name: ssl-certs
+            mountPath: /ssl
+{{- if .Values.mariadb.persistence.enabled }}
           - name: data
             mountPath: /var/lib/mysql
 {{- end }}
-{{- if .Values.mariadb.persistence.enabled }}
       volumes:
+      - name: ssl-certs
+        emptyDir: {}
+{{- if .Values.mariadb.persistence.enabled }}
       - name: data
         persistentVolumeClaim:
           claimName: "pvc-{{ template "powerdns.fullname" . }}-mariadb"
