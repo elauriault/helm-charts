@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ template "powerdns.fullname" . }}-ssl-certs"
+  labels:
+{{ include "powerdns.labels" . | indent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi

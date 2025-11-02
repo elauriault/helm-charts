@@ -96,7 +96,8 @@ spec:
 {{- end }}
       volumes:
       - name: ssl-certs
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: "{{ template "powerdns.fullname" . }}-ssl-certs"
 {{- if .Values.mariadb.persistence.enabled }}
       - name: data
         persistentVolumeClaim:

@@ -89,6 +89,12 @@ spec:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
                 key: MYSQL_PASS
+          - name: PDNS_gmysql_ssl_ca
+            value: "/ssl/ca-cert.pem"
+          volumeMounts:
+          - name: ssl-certs
+            mountPath: /ssl
+            readOnly: true
           ports:
           - containerPort: 53
             name: dns-udp
@@ -99,3 +105,7 @@ spec:
           - containerPort: 8081
             name: api
             protocol: TCP
+      volumes:
+      - name: ssl-certs
+        persistentVolumeClaim:
+          claimName: "{{ template "powerdns.fullname" . }}-ssl-certs"
