@@ -66,9 +66,9 @@ spec:
 {{- range .Values.mariadb.args }}
           - {{ . | quote }}
 {{- end }}
-          - --ssl-ca=/ssl/ca-cert.pem
           - --ssl-cert=/ssl/server-cert.pem
           - --ssl-key=/ssl/server-key.pem
+          - --require-secure-transport=ON
 {{- end }}
           env:
           - name: MYSQL_INITDB_SKIP_TZINFO
