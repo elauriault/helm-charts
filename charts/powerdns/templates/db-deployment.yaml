@@ -45,6 +45,9 @@ spec:
             chmod 600 ca-key.pem server-key.pem
             chmod 644 ca-cert.pem server-cert.pem server-req.pem
 
+            # Change ownership to mysql user (UID 999 in MariaDB container)
+            chown 999:999 ca-key.pem server-key.pem ca-cert.pem server-cert.pem server-req.pem
+
             echo "SSL certificates generated successfully"
           else
             echo "SSL certificates already exist"
