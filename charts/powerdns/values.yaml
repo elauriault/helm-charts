@@ -102,6 +102,7 @@ mariadb:
     - --bind-address=*
     - --innodb_use_native_aio=0
     - --innodb_flush_method=fsync
+    - --skip-ssl
   requests:
     memory: "512Mi"
     cpu: "300m"
