@@ -102,7 +102,6 @@ mariadb:
     - --bind-address=*
     - --innodb_use_native_aio=0
     - --innodb_flush_method=fsync
-    - --require_secure_transport=OFF
   requests:
     memory: "512Mi"
     cpu: "300m"
