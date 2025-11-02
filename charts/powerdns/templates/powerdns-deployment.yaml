@@ -85,8 +85,8 @@ spec:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
                 key: MYSQL_PASS
-          - name: PDNS_gmysql_ssl_ca
-            value: "/ssl/ca-cert.pem"
+          - name: PDNS_gmysql_ssl
+            value: "yes"
           volumeMounts:
           - name: ssl-certs
             mountPath: /ssl
