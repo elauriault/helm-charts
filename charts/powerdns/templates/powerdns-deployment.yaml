@@ -83,11 +83,15 @@ spec:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
                 key: MYSQL_PASS
-          - name: PDNS_gmysql_ssl
-            value: "yes"
+          - name: PDNS_gmysql_group
+            value: "pdns"
           volumeMounts:
           - name: ssl-certs
             mountPath: /ssl
+            readOnly: true
+          - name: mysql-client-config
+            mountPath: /etc/my.cnf
+            subPath: my.cnf
             readOnly: true
           ports:
           - containerPort: 53
@@ -103,3 +107,6 @@ spec:
       - name: ssl-certs
         persistentVolumeClaim:
           claimName: "{{ template "powerdns.fullname" . }}-ssl-certs"
+      - name: mysql-client-config
+        configMap:
+          name: "{{ template "powerdns.fullname" . }}-mysql-client-config"

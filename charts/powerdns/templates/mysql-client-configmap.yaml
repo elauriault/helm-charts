@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "powerdns.fullname" . }}-mysql-client-config"
+  labels:
+{{ include "powerdns.labels" . | indent 4 }}
+data:
+  my.cnf: |
+    [pdns]
+    ssl-ca=/ssl/ca-cert.pem
