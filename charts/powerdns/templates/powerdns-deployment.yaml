@@ -89,8 +89,6 @@ spec:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
                 key: MYSQL_PASS
-          - name: PDNS_gmysql_ssl
-            value: "no"
           ports:
           - containerPort: 53
             name: dns-udp
