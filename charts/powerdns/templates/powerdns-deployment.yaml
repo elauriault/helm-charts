@@ -28,7 +28,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
             exec:
-              command: ["/bin/sh", "-c", "pdnsutil list-zone {{ .Values.domain }}"]
+              command: ["/bin/sh", "-c", "nc -z localhost 8081"]
+            initialDelaySeconds: 30
           readinessProbe:
             exec:
               command: ["/bin/sh", "-c", "nc -vz {{ $db_host }} 3306"]
