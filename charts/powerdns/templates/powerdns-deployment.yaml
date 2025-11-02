@@ -69,10 +69,6 @@ spec:
             value: {{ .Values.powerdns.default_ttl | quote }}
           - name: PDNS_soa_minimum_ttl
             value: {{ .Values.powerdns.soa_minimum_ttl | quote }}
-          - name: PDNS_default_soa_name
-            value: "ns1.{{ .Values.powerdns.domain }}"
-          - name: PDNS_default_soa_mail
-            value: "hostmaster.{{ .Values.powerdns.domain }}"
           - name: MYSQL_ENV_MYSQL_HOST
             value: {{ quote $db_host }}
           - name: MYSQL_ENV_MYSQL_PASSWORD
