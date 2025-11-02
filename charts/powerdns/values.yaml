@@ -23,7 +23,7 @@ image:
   tag: 4.9-alpine
   pullPolicy: IfNotPresent
 domain: external.local
-master: "yes"
+primary: "yes"
 api: "yes"
 webserver: "yes"
 webserver_address: "0.0.0.0"

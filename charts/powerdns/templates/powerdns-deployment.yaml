@@ -48,8 +48,8 @@ spec:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
                 key: PDNS_APIKEY
-          - name: PDNS_master
-            value: {{ .Values.powerdns.master | quote}}
+          - name: PDNS_primary
+            value: {{ .Values.powerdns.primary | quote}}
           - name: PDNS_api
             value: {{ .Values.powerdns.api | quote }}
           - name: PDNS_webserver
