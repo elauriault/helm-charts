@@ -20,7 +20,7 @@ service:
     port: 8081
 image:
   repository: pschiffe/pdns-mysql
-  tag: alpine
+  tag: 4.9-alpine
   pullPolicy: IfNotPresent
 domain: external.local
 master: "yes"
@@ -66,7 +66,7 @@ powerdns:
       port: 8081
   image:
     repository: pschiffe/pdns-mysql
-    tag: alpine
+    tag: 4.9-alpine
     pullPolicy: IfNotPresent
   domain: external.local
   master: "yes"
@@ -92,7 +92,7 @@ mariadb:
   enabled: true
   image:
     repository: mariadb
-    tag: latest
+    tag: "11.2"
     pullPolicy: IfNotPresent
   persistence:
     enabled: false
@@ -116,8 +116,8 @@ admin:
     type: LoadBalancer
     port: 9191
   image:
-    repository: aescanero/powerdns-admin
-    tag: latest
+    repository: powerdnsadmin/pda-legacy
+    tag: v0.4.2
     pullPolicy: IfNotPresent
   proto: "http"
   powerdns_host: "127.0.0.1"
