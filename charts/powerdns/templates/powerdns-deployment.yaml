@@ -28,8 +28,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
             exec:
-              command: ["/bin/sh", "-c", "nc -z localhost 8081"]
-            initialDelaySeconds: 30
+              command: ["/bin/sh", "-c", "pdnsutil list-zone {{ .Values.domain }}"]
+            initialDelaySeconds: 60
           readinessProbe:
             exec:
               command: ["/bin/sh", "-c", "nc -vz {{ $db_host }} 3306"]
@@ -37,10 +37,10 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: 
+                command:
                 - "/bin/sh"
                 - "-c"
-                - "a=0;while [ $a -lt 200 ];do sleep 1;a=$[a+1];echo 'stage: '$a;if nc -vz {{ $db_host }} 3306;then (! pdnsutil list-zone {{ .Values.powerdns.domain }}) && pdnsutil create-zone {{ .Values.powerdns.domain }};echo 'End Stage';a=200;fi;done"
+                - "sleep 30 && pdnsutil list-zone {{ .Values.powerdns.domain }} || pdnsutil create-zone {{ .Values.powerdns.domain }}"
           resources:
 {{ toYaml .Values.powerdns.resources | indent 12 }}
           env:
