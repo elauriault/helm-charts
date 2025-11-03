@@ -27,9 +27,13 @@ spec:
           image: "{{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag }}"
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
           livenessProbe:
-            exec:
-              command: ["/bin/sh", "-c", "nc -vz 127.0.0.1 9191 2>/dev/null"]
+            httpGet:
+              path: /
+              port: 80
             initialDelaySeconds: 80
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
           resources:
 {{ toYaml .Values.admin.resources | indent 12 }}
           env:
@@ -61,7 +65,7 @@ spec:
           - name: PDNSADMIN_SQLA_DB_USER
             value: {{ .Values.admin.mysql_user | quote }} 
           ports:
-          - containerPort: 9191
+          - containerPort: 80
             name: pdns-admin-http
             protocol: TCP
 {{- end }}
