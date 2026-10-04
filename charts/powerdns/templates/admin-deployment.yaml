@@ -42,7 +42,7 @@ spec:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
                 key: PDNS_APIKEY
-          - name: PDNSADMIN_SECRET_KEY
+          - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
                 name: "{{ template "powerdns.fullname" . }}-secret"
