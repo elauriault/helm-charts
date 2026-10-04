@@ -120,11 +120,8 @@ admin:
     tag: v0.4.2
     pullPolicy: IfNotPresent
   proto: "http"
-  powerdns_host: "127.0.0.1"
   powerdns_port: "8081"
-  mysql_host: powerdns-db
-  mysql_database: "powerdns"
-  mysql_user: "powerdns"
+  powerdns_version: "4.9.5"
   ingress:
     enabled: "false"
     class: "traefik"
